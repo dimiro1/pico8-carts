@@ -11,15 +11,19 @@ function aabb(a,b)
 	return false
 end
 
+function update_object(o)
+	o.collision=false
+end
+
 function draw_object(o)
 	rect(o.x,o.y,o.x+o.w,o.y+o.h,o.c)
+	if o.collision then
+		rectfill(o.x,o.y,o.x+o.w,o.y+o.h,o.c)
+	end
 end
 
 function draw_player(p)
 	draw_object(p)
-	if p.collision then
-		rectfill(p.x,p.y,p.x+p.w,p.y+p.h,p.c)
-	end
 end
 
 function dummy() end
@@ -30,12 +34,15 @@ function update_player_collisions(p)
 		if p!=o then
 			if aabb(p,o) then
 				p.collision=true
+				o.collision=true
 			end
 		end
 	end
 end
 
 function update_player(self)
+	self.collision=false
+	
 	if btn(➡️) then
 		self.dx=1
 	elseif btn(⬅️) then
@@ -67,9 +74,10 @@ function make_object(x,y,w,h,c)
 		c=c,
 		dx=0,
 		dy=0,
-		update=dummy,
+		update=update_object,
 		collides=dummy,
 		draw=draw_object,
+		collision=false,
 	}
 end
 
@@ -84,10 +92,10 @@ end
 function _init()
 	objects = {}
 	
-	add(objects,make_object(0,0,30,30,10))
-	add(objects,make_object(97,0,30,30,11))
-	add(objects,make_object(97,97,30,30,14))
-	add(objects,make_object(0,97,30,30,9))
+	add(objects,make_object(2,2,30,30,10))
+	add(objects,make_object(95,2,30,30,11))
+	add(objects,make_object(95,95,30,30,14))
+	add(objects,make_object(2,95,30,30,9))
 	add(objects,make_player(60,78))
 end
 
